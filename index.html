@@ -9,28 +9,53 @@
 		<title>CSS Solar System</title>
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-
+		<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 		<link href="stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
-		
+		<script>
+		$(function(){
+			window.setInterval(function(){
+				$.each( [ ".earth", ".mars", ".venus", ".mercury"], function( index, value ){
+					var earth = $( value );
+				var matrix = window.getComputedStyle( earth[ 0 ], null ).getPropertyValue("transform" );
+				var matrix = matrix.replace( /matrix\(|\)/, "" ).split(",");
+				$.each( matrix, function( index, value ){
+					matrix[ index ] = parseFloat( value, 10 );
+				});
+				var sign  = ( matrix[ 0 ] > 0 )? "" : 180;
+				var angle = ( Math.acos( matrix[ 0 ] ) );
+				var e = earth.data( "e" );
+				var paraphelion = earth.data( "paraphelion" );
+				var width = ( paraphelion * ( ( 1 + e ) / ( 1 + e * Math.cos( angle ) ) ) ) * 2;
+				earth.css({
+					"width": width,
+					"height": width,
+					"margin-left": parseFloat( "-" + ( width / 2 ) ),
+					"margin-top": parseFloat( "-" + ( width / 2 ) )
+				});
+				});
+				
+			});
+		});
+		</script>
 
 	</head>
 	<body>
 
 		<div class="sun orbit">Sun</div>
 
-		<div class="mercury orbit">
+		<div class="mercury orbit" data-paraphelion="153" data-e=".206">
 			<!-- Mercury -->
 		</div>
 
-		<div class="venus orbit">
+		<div class="venus orbit" data-paraphelion="359" data-e=".007">
 			<!-- Venus -->
 		</div>
 
-		<div class="earth orbit">
+		<div class="earth orbit" data-paraphelion="490" data-e=".017">
 			<!-- Earth -->
 		</div>
 
-		<div class="mars orbit">
+		<div class="mars orbit" data-paraphelion="690" data-e=".093">
 			<!-- Mars -->
 		</div>
 
