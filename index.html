@@ -15,17 +15,14 @@
 		$(function(){
 			window.setInterval(function(){
 				$.each( [ ".earth", ".mars", ".venus", ".mercury"], function( index, value ){
-					var earth = $( value );
-				var matrix = window.getComputedStyle( earth[ 0 ], null ).getPropertyValue("transform" );
-				var matrix = matrix.replace( /matrix\(|\)/, "" ).split(",");
-				$.each( matrix, function( index, value ){
-					matrix[ index ] = parseFloat( value, 10 );
-				});
-				var sign  = ( matrix[ 0 ] > 0 )? "" : 180;
-				var angle = ( Math.acos( matrix[ 0 ] ) );
-				var e = earth.data( "e" );
-				var paraphelion = earth.data( "paraphelion" );
-				var width = ( paraphelion * ( ( 1 + e ) / ( 1 + e * Math.cos( angle ) ) ) ) * 2;
+					var angle, width,
+						earth = $( value ),
+						e = earth.data( "e" ),
+						paraphelion = earth.data( "paraphelion" ),
+						matrix = window.getComputedStyle( earth[ 0 ], null ).getPropertyValue("transform" );
+				matrix = matrix.replace( /matrix\(|\)/, "" ).split(",");
+				angle = ( Math.acos( parseFloat( matrix[ 0 ] ) ) );
+				width = ( paraphelion * ( ( 1 + e ) / ( 1 + e * Math.cos( angle ) ) ) ) * 2;
 				earth.css({
 					"width": width,
 					"height": width,
