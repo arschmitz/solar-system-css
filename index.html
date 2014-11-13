@@ -14,21 +14,26 @@
 		<script>
 		$(function(){
 			window.setInterval(function(){
-				$.each( [ ".earth", ".mars", ".venus", ".mercury"], function( index, value ){
+				$.each( [ ".mercury"], function( index, value ){
 					var angle, width,
 						earth = $( value ),
-						e = earth.data( "e" ),
+						e = parseFloat( earth.data( "e" ) ),
 						paraphelion = earth.data( "paraphelion" ),
 						matrix = window.getComputedStyle( earth[ 0 ], null ).getPropertyValue("transform" );
 				matrix = matrix.replace( /matrix\(|\)/, "" ).split(",");
-				angle = ( Math.acos( parseFloat( matrix[ 0 ] ) ) );
+				angle = Math.round(Math.atan2(matrix[ 1 ], matrix [ 0 ] ) * (180/Math.PI));
+				angle = ( angle < 0 ) ? angle + 360 : angle ;
+				angle = parseFloat( angle * .0174532925 );
 				width = ( paraphelion * ( ( 1 + e ) / ( 1 + e * Math.cos( angle ) ) ) ) * 2;
+				
+				console.log( width );
 				earth.css({
-					"width": width,
-					"height": width,
-					"margin-left": parseFloat( "-" + ( width / 2 ) ),
-					"margin-top": parseFloat( "-" + ( width / 2 ) )
+					width: width,
+					height: width,
+					"margin-left": -(width/2),
+					"margin-top": -(width/2),
 				});
+				
 				});
 				
 			});
@@ -40,7 +45,8 @@
 
 		<div class="sun orbit">Sun</div>
 
-		<div class="mercury orbit" data-paraphelion="153" data-e=".206">
+		<div class="mercury orbit" data-paraphelion="153" data-e=".206"></div>
+		<div class="mercury-orbit" data-paraphelion="153" data-e=".206">
 			<!-- Mercury -->
 		</div>
 
